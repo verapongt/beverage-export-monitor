@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thai Beverage Export Monitor</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Dashboard navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" role="img">
+              <path d="M16 3c6.1 0 11 4.9 11 11 0 8.2-11 15-11 15S5 22.2 5 14C5 7.9 9.9 3 16 3Z" fill="#0f766e" />
+              <path d="M11 14.1c2.4-3.5 5.9-5.1 10.6-4.8-1.1 5.5-4.7 8.6-10.8 9.3 2.1-.8 4-2.1 5.6-3.9-2.2.2-4 .1-5.4-.6Z" fill="#f8fafc" />
+            </svg>
+          </div>
+          <div>
+            <strong>Export Monitor</strong>
+            <span>HS 2202 Proxy</span>
+          </div>
+        </div>
+        <nav class="nav-list">
+          <a href="#overview" class="active">Overview</a>
+          <a href="#trend">Trend</a>
+          <a href="#country">Country</a>
+          <a href="#detail">Country Detail</a>
+          <a href="#sources">Data Source</a>
+          <a href="#method">Methodology</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Thai customs export proxy for non-alcoholic beverages</p>
+            <h1>Dashboard ติดตามการส่งออกเครื่องดื่มใกล้เคียง Sappe / Mogu Mogu</h1>
+          </div>
+          <div class="toolbar" aria-label="Dashboard filters">
+            <label>
+              Period
+              <select id="periodSelect"></select>
+            </label>
+            <label>
+              Country
+              <select id="countrySelect"></select>
+            </label>
+            <button id="resetButton" type="button" title="Reset filters">Reset</button>
+          </div>
+        </header>
+
+        <section class="notice" role="note">
+          Dashboard นี้ใช้หมวดสินค้า HS 2202 เป็น proxy ระดับอุตสาหกรรม ไม่ใช่ยอดส่งออกหรือยอดขายของแบรนด์ Sappe / Mogu Mogu โดยตรง
+        </section>
+
+        <section id="overview" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Overview</p>
+              <h2>ภาพรวมมูลค่าส่งออกล่าสุด</h2>
+            </div>
+            <span id="lastUpdated" class="status-pill"></span>
+          </div>
+          <div id="kpiGrid" class="kpi-grid"></div>
+          <div class="dashboard-grid">
+            <article class="panel wide">
+              <div class="panel-heading">
+                <h3>แนวโน้มรายเดือน</h3>
+                <span>FOB value, THB mn</span>
+              </div>
+              <div id="trendChart" class="chart trend-chart"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-heading">
+                <h3>สัดส่วนประเทศปลายทาง</h3>
+                <span>Top destinations</span>
+              </div>
+              <div id="shareChart" class="share-chart"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="trend" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Trend</p>
+              <h2>การเร่งตัวและชะลอตัว</h2>
+            </div>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel">
+              <div class="panel-heading">
+                <h3>Signal board</h3>
+                <span>YoY and MoM</span>
+              </div>
+              <div id="signalBoard" class="signal-board"></div>
+            </article>
+            <article class="panel wide">
+              <div class="panel-heading">
+                <h3>Monthly country comparison</h3>
+                <span>Top 6 countries</span>
+              </div>
+              <div id="countryTrendChart" class="chart"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="country" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Country</p>
+              <h2>ประเทศปลายทาง Top 10</h2>
+            </div>
+          </div>
+          <article class="panel">
+            <div id="countryBars" class="bar-list"></div>
+          </article>
+        </section>
+
+        <section id="detail" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Country Detail</p>
+              <h2 id="countryDetailTitle">Top 10 สินค้าส่งออกตามประเทศ</h2>
+            </div>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel wide">
+              <div class="panel-heading">
+                <h3>Top HS products</h3>
+                <span>Value ranking</span>
+              </div>
+              <div id="productBars" class="bar-list compact"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-heading">
+                <h3>Product mix</h3>
+                <span>Treemap style</span>
+              </div>
+              <div id="treemap" class="treemap"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="sources" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Data Source</p>
+              <h2>แหล่งข้อมูลและการอัปเดต</h2>
+            </div>
+          </div>
+          <div class="source-grid">
+            <article class="panel">
+              <h3>Import local CSV</h3>
+              <p>รองรับไฟล์ CSV ที่มีคอลัมน์ period, hs_code, country, value_fob, quantity, unit, source, downloaded_at</p>
+              <input id="csvInput" type="file" accept=".csv,text/csv" />
+              <button id="sampleButton" type="button">Load sample data</button>
+            </article>
+            <article class="panel">
+              <h3>Recommended pipeline</h3>
+              <ol class="steps">
+                <li>ตรวจสอบ endpoint หรือ CSV export บน customs.go.th</li>
+                <li>ดึงตามเดือน ปี HS code และประเทศ พร้อม rate limit</li>
+                <li>เก็บ raw response ก่อน transform เพื่อ audit</li>
+                <li>validate เดือนซ้ำ ประเทศซ้ำ หน่วย และ missing value</li>
+                <li>แสดง timestamp และ source URL ทุกครั้งใน dashboard</li>
+              </ol>
+            </article>
+            <article class="panel">
+              <h3>Source registry</h3>
+              <div class="source-list">
+                <a href="https://www.customs.go.th/statistic_report.php">กรมศุลกากร: รายงานสถิติ</a>
+                <a href="https://tariffeservice.customs.go.th/ITRF/index.jsp">Tariff e-Service</a>
+                <a href="https://mukdahan.customs.go.th/data_files/d8b45eb4b7ef6eaffaeb9fc1dca20db5.pdf">ด่านศุลกากรมุกดาหาร: เอกสาร HS 2202</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="method" class="section">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Methodology</p>
+              <h2>นิยามและข้อจำกัด</h2>
+            </div>
+          </div>
+          <div class="method-grid">
+            <article class="panel">
+              <h3>Proxy definition</h3>
+              <p>เริ่มจาก HS 2202 สำหรับน้ำ น้ำแร่ น้ำอัดลมที่เติมน้ำตาลหรือปรุงกลิ่นรส และเครื่องดื่มไม่มีแอลกอฮอล์อื่น ๆ ก่อนเจาะรหัสละเอียด 8 หรือ 11 หลักเมื่อมีข้อมูลจริง</p>
+            </article>
+            <article class="panel">
+              <h3>Calculated metrics</h3>
+              <p>MoM = เทียบเดือนก่อนหน้า, YoY = เทียบเดือนเดียวกันปีก่อน, Top 10 = ranking ตาม value_fob ในช่วงเวลาที่เลือก</p>
+            </article>
+            <article class="panel">
+              <h3>Investor caveat</h3>
+              <p>ข้อมูลนี้ช่วยอ่านภาพ macro ของตลาดส่งออก แต่ไม่ใช่คำแนะนำซื้อขายหุ้น และไม่ควรใช้แทนยอดขายบริษัทหรือ market share ระดับแบรนด์</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
